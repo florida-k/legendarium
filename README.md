@@ -1,7 +1,8 @@
 # The Legendarium
 Team Name: **The Trix**\
 Course: COP 3530 Data Structures and Algorithm
-<img width="964" height="720" alt="image" src="https://github.com/user-attachments/assets/8e0d1af9-35bd-43bd-b0ca-2ec24081812d" />
+<img src="https://github.com/user-attachments/assets/8e0d1af9-35bd-43bd-b0ca-2ec24081812d" alt="image" width="50%" />
+
 
 
 The **Legendarium** is a powerful, dark magical spellbook introduced in Season 6 of _Winx Club_.
