@@ -1,7 +1,7 @@
 # The Legendarium
 Team Name: **The Trix**\
 Course: COP 3530 Data Structures and Algorithm
-<img src="https://github.com/user-attachments/assets/8e0d1af9-35bd-43bd-b0ca-2ec24081812d" alt="image" width="40%" />
+<img src="https://github.com/user-attachments/assets/8e0d1af9-35bd-43bd-b0ca-2ec24081812d" align = "right" alt="image" width="300" />
 
 
 
