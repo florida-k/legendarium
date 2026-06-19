@@ -1,10 +1,8 @@
 # The Legendarium
 Team Name: **The Trix**\
 Course: COP 3530 Data Structures and Algorithm
-<img src="https://github.com/user-attachments/assets/8e0d1af9-35bd-43bd-b0ca-2ec24081812d" alt="image" width="90%" />
-<img src="https://github.com/user-attachments/assets/390f18ec-4b05-403b-9002-e9db89b1e443" align = "right" alt="image" width="300" />
 
-
+<img src="https://github.com/user-attachments/assets/fd2df60a-1db8-4b00-bdfb-a980ecec319e" align = "right" alt="image" width="300" />
 
 The **Legendarium** is a powerful, dark magical spellbook introduced in Season 6 of _Winx Club_.
 Created by the evil wizard Acheron, it has the ability to bring myths and fictional creatures into reality.
