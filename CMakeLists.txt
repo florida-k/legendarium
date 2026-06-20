@@ -6,4 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(include)
 
 add_executable(legendarium
-        src/main.cpp)
+        src/main.cpp
+        src/HashTable.cpp
+        include/Spell.h
+        include/HashTable.h)
