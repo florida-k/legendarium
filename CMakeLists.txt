@@ -8,5 +8,7 @@ include_directories(include)
 add_executable(legendarium
         src/main.cpp
         src/HashTable.cpp
+        src/Trie.cpp
         include/Spell.h
-        include/HashTable.h)
+        include/HashTable.h
+        include/Trie.h)
