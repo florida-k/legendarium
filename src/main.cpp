@@ -1,4 +1,5 @@
 #include "HashTable.h"
+#include "Trie.h"
 #include <iostream>
 using namespace std;
 
@@ -25,6 +26,18 @@ int main() {
     } else {
         cout << "Spell not found." << endl;
     }
+
+    // Testing Trie
+    Trie t;
+    t.insert("Dark Spiral");
+    t.insert("Shadow Hand");
+    t.insert("Ice Shard");
+
+    cout << "\nPrefix search for 'Da':" << endl;
+    vector<string> results = t.startsWith("Da");
+
+    for (auto& s : results)
+        cout << s << endl;
 
     return 0;
 }
