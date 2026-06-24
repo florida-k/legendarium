@@ -1,6 +1,4 @@
-#ifndef LEGENDARIUM_MAIN_TRIE_H
-#define LEGENDARIUM_MAIN_TRIE_H
-
+#pragma once
 #include <string>
 #include <vector>
 using namespace std;
@@ -23,5 +21,3 @@ public:
     bool search(const string& word);
     vector<string> startsWith(const string& prefix);
 };
-
-#endif //LEGENDARIUM_MAIN_TRIE_H
