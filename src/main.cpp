@@ -3,8 +3,18 @@
 #include <iostream>
 using namespace std;
 
+void menu() {
+    cout << "\n=== Legendarium ===" << endl;
+    cout << "1. Search Spell" << endl;
+    cout << "2. Autocomplete Spell" << endl;
+    cout << "3. Filter by Element" << endl;
+    cout << "4. Compare Search Performance" << endl;
+    cout << "5. Exit" << endl;
+    cout << "Enter your choice: ";
+}
+
 int main() {
-    cout << "=== LEGENDARIUM ===" << endl;
+    menu();
 
     // testing hash table
     HashTable ht(100);
