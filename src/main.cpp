@@ -1,6 +1,8 @@
 #include "HashTable.h"
 #include "Trie.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 void menu() {
@@ -16,8 +18,49 @@ void menu() {
 int main() {
     menu();
 
+    ifstream file("spells.csv");
+
+    if (!file.is_open()) {
+        cout<<"not open"<<endl;
+    }
+    else {
+        cout<<"open"<<endl;
+    }
+
+    string header;
+    getline(file, header);
+
+    string line;
+
+    while (getline(file,line)) {
+        string spellname;
+        string element;
+        string stringmagic;
+        string stringdamage;
+
+        stringstream ss(line);
+
+        getline(ss,spellname, ',');
+        getline(ss,element, ',');
+        getline(ss,stringmagic, ',');
+        getline(ss,stringdamage, ',');
+
+        int magic = stoi(stringmagic);
+        int damage = stoi(stringdamage);
+
+        Spell spell;
+
+        spell.name = spellname;
+        spell.element = element;
+        spell.magic = magic;
+        spell.damage = damage;
+
+
+
+    }
+
     // testing hash table
-    HashTable ht(100);
+   /* HashTable ht(100);
 
     Spell s1 = {"Fire Ball", "Fire", 90,100};
     Spell s2 = {"Water Wave", "Water", 80,90};
@@ -49,5 +92,5 @@ int main() {
     for (auto& s : results)
         cout << s << endl;
 
-    return 0;
+    return 0;*/
 }

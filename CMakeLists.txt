@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.2)
+cmake_minimum_required(VERSION 4.1.2)
 project(legendarium)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -11,4 +11,5 @@ add_executable(legendarium
         src/Trie.cpp
         include/Spell.h
         include/HashTable.h
-        include/Trie.h)
+        include/Trie.h
+        src/main.cpp)
