@@ -11,7 +11,6 @@ struct TrieNode {
 };
 
 class Trie {
-private:
     TrieNode* root;
     void collect(TrieNode* node, const string& prefix, vector<string>& out);
 

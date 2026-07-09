@@ -3,7 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
+#include <vector>
 using namespace std;
+using namespace std::chrono;
 
 void menu() {
     cout << "\n=== Legendarium ===" << endl;
@@ -16,81 +19,133 @@ void menu() {
 }
 
 int main() {
-    menu();
-
+    // 1. load the 100k spells from the CSV into vector
+    vector<Spell> spells;
     ifstream file("spells.csv");
 
     if (!file.is_open()) {
-        cout<<"not open"<<endl;
-    }
-    else {
-        cout<<"open"<<endl;
+        cout << "Error: Could not open spells.csv" << endl;
+        return 1;
     }
 
-    string header;
-    getline(file, header);
+    string header, line;
+    getline(file, header); // skip the first header row
 
-    string line;
-
-    while (getline(file,line)) {
-        string spellname;
-        string element;
-        string stringmagic;
-        string stringdamage;
+    cout << "Loading 100k spells from file...please wait." << endl;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
 
         stringstream ss(line);
+        string name, element, magicStr, damageStr;
 
-        getline(ss,spellname, ',');
-        getline(ss,element, ',');
-        getline(ss,stringmagic, ',');
-        getline(ss,stringdamage, ',');
+        getline(ss, name, ',');
+        getline(ss, element, ',');
+        getline(ss, magicStr, ',');
+        getline(ss, damageStr, ',');
 
-        int magic = stoi(stringmagic);
-        int damage = stoi(stringdamage);
+        int magic = stoi(magicStr);
+        int damage = stoi(damageStr);
 
-        Spell spell;
+        Spell spell = {name, element, magic, damage};
+        spells.push_back(spell);
+    }
+    file.close();
+    cout << "Loaded " << spells.size() << " spells successfully!" << endl;
 
-        spell.name = spellname;
-        spell.element = element;
-        spell.magic = magic;
-        spell.damage = damage;
+    // 2. build our two custom data structures from vector
+    HashTable ht(150000);
+    Trie trie;
 
-
-
+    for (auto s : spells) {
+        ht.insert(s);
+        trie.insert(s.name);
     }
 
-    // testing hash table
-   /* HashTable ht(100);
+    // 3. user interaction menu
+    int choice = 0;
+    while (choice != 5) {
+        menu();
+        cin >> choice;
+        cin.ignore(); // clean up input buffer
 
-    Spell s1 = {"Fire Ball", "Fire", 90,100};
-    Spell s2 = {"Water Wave", "Water", 80,90};
-    Spell s3 = {"Shadow Hand", "Dark", 50,75};
+        if (choice == 1) {
+            string searchName;
+            cout << "Enter spell name to search: ";
+            getline(cin, searchName);
 
-    ht.insert(s1);
-    ht.insert(s2);
-    ht.insert(s3);
+            Spell* result = ht.search(searchName);
+            if (result != nullptr) {
+                cout << "\nFound Spell Details:" << endl;
+                cout << "  Name:    " << result->name << endl;
+                cout << "  Element: " << result->element << endl;
+                cout << "  Magic:   " << result->magic << endl;
+                cout << "  Damage:  " << result->damage << endl;
+            } else {
+                cout << "Spell not found." << endl;
+            }
+        }
+        else if (choice == 2) {
+            string prefix;
+            cout << "Enter prefix for autocomplete: ";
+            getline(cin, prefix);
 
-    Spell* result = ht.search("Shadow Veil");
-    if (result != nullptr) {
-        cout << "Spell Found:" << endl;
-        cout << "Name: " << result->name << endl;
-        cout << "Magic: " << result->magic << endl;
-        cout << "Damage: " << result->damage << endl;
-    } else {
-        cout << "Spell not found." << endl;
+            vector<string> results = trie.startsWith(prefix);
+            cout << "\nFound " << results.size() << " match(es):" << endl;
+
+            // only show the first 15 matches so the terminal doesn't explode
+            int limit = 15;
+            if (results.size() < limit) limit = results.size();
+
+            for (int i = 0; i < limit; i++) {
+                cout << "  - " << results[i] << endl;
+            }
+        }
+        else if (choice == 3) {
+            string targetElement;
+            cout << "Enter element to filter by (Ice, Darkness, Storm): ";
+            getline(cin, targetElement);
+
+            cout << "\nSpells with element '" << targetElement << "':" << endl;
+            int matchCount = 0;
+
+            for (auto s : spells) {
+                if (s.element == targetElement) {
+                    matchCount++;
+                    if (matchCount <= 15) { // only print the first 15 rows
+                        cout << "  - " << s.name << " (Damage: " << s.damage << ")" << endl;
+                    }
+                }
+            }
+            cout << "Total matching spells found: " << matchCount << endl;
+        }
+        else if (choice == 4) {
+            string benchmark;
+            cout << "Enter a single spell name to benchmark: ";
+            getline(cin, benchmark);
+
+            cout << "\n--- Performance Timing ---" << endl;
+
+            // hash table timing
+            auto startHash = high_resolution_clock::now();
+            ht.search(benchmark);
+            auto endHash = high_resolution_clock::now();
+            auto durationHash = duration_cast<microseconds>(endHash - startHash).count();
+            cout << "Hash Table Look-up: " << durationHash << " microseconds" << endl;
+
+            // trie timing
+            auto startTrie = high_resolution_clock::now();
+            trie.search(benchmark);
+            auto endTrie = high_resolution_clock::now();
+            auto durationTrie = duration_cast<microseconds>(endTrie - startTrie).count();
+            cout << "Trie Tree Look-up:  " << durationTrie << " microseconds" << endl;
+        }
+        else if (choice == 5) {
+            cout << "Goodbye!" << endl;
+        }
+        else {
+            cout << "Invalid choice. Try again." << endl;
+        }
     }
 
-    // Testing Trie
-    Trie t;
-    t.insert("Dark Spiral");
-    t.insert("Shadow Hand");
-    t.insert("Ice Shard");
-
-    cout << "\nPrefix search for 'Da':" << endl;
-    vector<string> results = t.startsWith("Da");
-
-    for (auto& s : results)
-        cout << s << endl;
-
-    return 0;*/
+    return 0;
 }
