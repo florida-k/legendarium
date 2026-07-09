@@ -65,8 +65,14 @@ int main() {
     int choice = 0;
     while (choice != 5) {
         menu();
-        cin >> choice;
-        cin.ignore(); // clean up input buffer
+
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter a number from 1-5." << endl;
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+        cin.ignore(10000, '\n');
 
         if (choice == 1) {
             string searchName;
@@ -120,30 +126,57 @@ int main() {
         }
         else if (choice == 4) {
             string benchmark;
-            cout << "Enter a single spell name to benchmark: ";
+            cout << "Enter a spell name to benchmark: ";
             getline(cin, benchmark);
 
-            cout << "\n--- Performance Timing ---" << endl;
+            cout << "\nSingle Look-up" << endl;
+            cout << "-------------------------------------------------" << endl;
 
-            // hash table timing
-            auto startHash = high_resolution_clock::now();
+            // single hash table look-up
+            auto sStartHash = high_resolution_clock::now();
             ht.search(benchmark);
+            auto sEndHash = high_resolution_clock::now();
+            auto sDurationHash = duration_cast<microseconds>(sEndHash - sStartHash).count();
+
+            // single trie look-up
+            auto sStartTrie = high_resolution_clock::now();
+            trie.search(benchmark);
+            auto sEndTrie = high_resolution_clock::now();
+            auto sDurationTrie = duration_cast<microseconds>(sEndTrie - sStartTrie).count();
+
+            cout << "Hash Table Single Search: " << sDurationHash << " microseconds" << endl;
+            cout << "Trie Tree Single Search:  " << sDurationTrie << " microseconds" << endl;
+
+            cout << "\nStress Testing (10,000 iterations)" << endl;
+            cout << "-------------------------------------------------" << endl;
+
+            // 10k hash table loops
+            auto startHash = high_resolution_clock::now();
+            for (int i = 0; i < 10000; i++) {
+                ht.search(benchmark);
+            }
             auto endHash = high_resolution_clock::now();
             auto durationHash = duration_cast<microseconds>(endHash - startHash).count();
-            cout << "Hash Table Look-up: " << durationHash << " microseconds" << endl;
 
-            // trie timing
+            // 10k trie loops
             auto startTrie = high_resolution_clock::now();
-            trie.search(benchmark);
+            for (int i = 0; i < 10000; i++) {
+                trie.search(benchmark);
+            }
             auto endTrie = high_resolution_clock::now();
             auto durationTrie = duration_cast<microseconds>(endTrie - startTrie).count();
-            cout << "Trie Tree Look-up:  " << durationTrie << " microseconds" << endl;
+
+            // stress testing results
+            cout << "Hash Table (10k runs): " << durationHash << " microseconds" << endl;
+            cout << "Trie (10k runs):  " << durationTrie << " microseconds" << endl;
+            cout << "Average Hash Table Speed: " << (double)durationHash / 10000.0 << " microseconds per search" << endl;
+            cout << "Average Trie Speed:  " << (double)durationTrie / 10000.0 << " microseconds per search" << endl;
         }
         else if (choice == 5) {
             cout << "Goodbye!" << endl;
         }
         else {
-            cout << "Invalid choice. Try again." << endl;
+            cout << "Invalid choice. Please enter a number from 1-5." << endl;
         }
     }
 
