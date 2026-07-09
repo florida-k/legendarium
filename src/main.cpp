@@ -106,17 +106,17 @@ int main() {
             getline(cin, targetElement);
 
             cout << "\nSpells with element '" << targetElement << "':" << endl;
-            int matchCount = 0;
+            int matches = 0;
 
             for (auto s : spells) {
                 if (s.element == targetElement) {
-                    matchCount++;
-                    if (matchCount <= 15) { // only print the first 15 rows
+                    matches++;
+                    if (matches <= 15) { // only print the first 15 rows
                         cout << "  - " << s.name << " (Damage: " << s.damage << ")" << endl;
                     }
                 }
             }
-            cout << "Total matching spells found: " << matchCount << endl;
+            cout << "Total matching spells found: " << matches << endl;
         }
         else if (choice == 4) {
             string benchmark;
