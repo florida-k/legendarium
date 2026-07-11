@@ -5,7 +5,6 @@ using namespace std;
 
 struct TrieNode {
     bool isEnd; // marks end of a word
-    vector<string> words;
     TrieNode* children[26]; // a–z child pointers
 
     TrieNode();
@@ -13,13 +12,10 @@ struct TrieNode {
 
 class Trie {
     TrieNode* root;
-    void collect(TrieNode* node, vector<string>& out); // DFS collect
-    void freeNode(TrieNode* node); // frees all nodes
-    char normalizeChar(char c); // converts char to lowercase a–z
+    void collect(TrieNode* node, const string& prefix, vector<string>& out);
 
 public:
     Trie();
-    ~Trie();
     void insert(const string& word);
     bool search(const string& word);
     vector<string> startsWith(const string& prefix);
