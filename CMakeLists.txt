@@ -11,5 +11,4 @@ add_executable(legendarium
         src/Trie.cpp
         include/Spell.h
         include/HashTable.h
-        include/Trie.h
-        src/main.cpp)
+        include/Trie.h)

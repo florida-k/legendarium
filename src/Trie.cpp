@@ -1,5 +1,5 @@
 #include "Trie.h"
-#include <cctype>
+#include <cctype> // char validation and lowercase conversion
 
 TrieNode::TrieNode() {
     isEnd = false;
@@ -11,13 +11,31 @@ Trie::Trie() {
     root = new TrieNode();
 }
 
+Trie::~Trie() {
+    freeNode(root);
+}
+
+void Trie::freeNode(TrieNode* node) {
+    if (!node) return;
+    for (int i = 0; i < 26; i++)
+        if (node->children[i])
+            freeNode(node->children[i]);
+    delete node;
+}
+
+// converts alphabetic chars to lowercase; returns '\0' for non-letters
+char Trie::normalizeChar(char c) {
+    if (!isalpha((unsigned char)c)) return '\0';
+    return (char)tolower((unsigned char)c);
+}
+
 void Trie::insert(const string& word) {
     TrieNode* curr = root;
 
     for (char c : word) {
-        if (!isalpha(c)) continue;
-        c = tolower(c);
-        int idx = c - 'a';
+        char nc = normalizeChar(c); // normalized
+        if (nc == '\0') continue;   // skip non-letters
+        int idx = nc - 'a';
 
         if (!curr->children[idx])
             curr->children[idx] = new TrieNode();
@@ -26,15 +44,16 @@ void Trie::insert(const string& word) {
     }
 
     curr->isEnd = true;
+    curr->words.push_back(word); // store original name
 }
 
 bool Trie::search(const string& word) {
     TrieNode* curr = root;
 
     for (char c : word) {
-        if (!isalpha(c)) continue;
-        c = tolower(c);
-        int idx = c - 'a';
+        char nc = normalizeChar(c);
+        if (nc == '\0') continue;
+        int idx = nc - 'a';
 
         if (!curr->children[idx])
             return false;
@@ -45,16 +64,17 @@ bool Trie::search(const string& word) {
     return curr->isEnd;
 }
 
-void Trie::collect(TrieNode* node, const string& prefix, vector<string>& out) {
+// DFS: collects stored words only (original names)
+void Trie::collect(TrieNode* node, vector<string>& out) {
     if (!node) return;
-    if (node->isEnd) out.push_back(prefix);
 
-    for (int i = 0; i < 26; i++) {
-        if (node->children[i]) {
-            char c = 'a' + i;
-            collect(node->children[i], prefix + c, out);
-        }
-    }
+    if (node->isEnd)
+        for (const string& w : node->words)
+            out.push_back(w);
+
+    for (int i = 0; i < 26; i++)
+        if (node->children[i])
+            collect(node->children[i], out);
 }
 
 vector<string> Trie::startsWith(const string& prefix) {
@@ -62,9 +82,9 @@ vector<string> Trie::startsWith(const string& prefix) {
     vector<string> out;
 
     for (char c : prefix) {
-        if (!isalpha(c)) continue;
-        c = tolower(c);
-        int idx = c - 'a';
+        char nc = normalizeChar(c);
+        if (nc == '\0') continue;
+        int idx = nc - 'a';
 
         if (!curr->children[idx])
             return out;
@@ -72,6 +92,6 @@ vector<string> Trie::startsWith(const string& prefix) {
         curr = curr->children[idx];
     }
 
-    collect(curr, prefix, out);
+    collect(curr, out);
     return out;
 }
