@@ -24,3 +24,14 @@ Our strategy is to implement a Trie for prefix-based searching and a Hash Table 
 
 ### Tools: Programming languages or any tools/frameworks we will be using
 C++, GitHub, CSV files, Clion.
+
+## How to Build and Run the Program
+
+### IMPORTANT: Data File Placement
+For the program to run successfully, it requires `spells.csv` (containing the 100,000 spells) to be located in the **exact same directory where the compiled binary executable runs**. 
+
+### Using CLion / IDE (Recommended)
+1. Open the project folder in **CLion**.
+2. Let CLion automatically load and configure the `CMakeLists.txt` file.
+3. Move `spells.csv` into the `cmake-build-debug` directory as mentioned in the setup step above.
+4. Click the green **Run** button at the top right of the IDE to execute `main.cpp`.
